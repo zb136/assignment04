@@ -1,12 +1,23 @@
 ---
 title: "Assignment04" 
+authors: "Hailey Wellenstein & Zujaja Baig"
 format: html
 editor: visual
 editor_options: 
   chunk_output_type: console
+execute:
+    warning: false
 ---
 
-##Data Cleaning
+# Introduction to Assignment
+
+## Source of Data:  
+[World Bank Data Bank](https://databank.worldbank.org/reports.aspx?source=2&Topic=1)
+
+
+
+
+## Data Cleaning
 
 ```{r}
 library(tidyverse)
@@ -34,7 +45,7 @@ WB_Agriculture_Indicators$value <- as.numeric(WB_Agriculture_Indicators$value)
 ```
 
 
-##Data Visualization
+# First Data Visualization
 
 ### First visual
 
