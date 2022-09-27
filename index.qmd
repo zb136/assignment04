@@ -47,6 +47,8 @@ WB_Agriculture_Indicators$value <- as.numeric(WB_Agriculture_Indicators$value)
 
 # First Data Visualization
 
+### First visual
+
 ```{r}
 WB_Agriculture_Indicators %>%
   filter(series_code == "SL.AGR.EMPL.FE.ZS") %>%
@@ -71,7 +73,9 @@ WB_Agriculture_Indicators %>%
 ```
 
 
-### Second visual
+
+
+### Second visualization
 
 ```{r}
 WB_Agriculture_Indicators %>%
@@ -93,5 +97,3 @@ WB_Agriculture_Indicators %>%
        y= "% of agricultural land",
        caption = "Source: World Bank, 2022")
 ```
-
-
