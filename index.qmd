@@ -62,9 +62,36 @@ WB_Agriculture_Indicators %>%
                                 "darkblue" , "darkgoldenrod" , "darkorchid4" , "gray44"))+
   facet_wrap(~country_name) +
            theme_minimal() +
+  
   labs(title ="How has female participation in agriculture changed across Central America?",
        subtitle = "Percentage of female participation in agricultural labor force, as defined by International Labor Organization, from 2000-2020",
        x = "Year",
        y= "% of female in agricultural labor force",
        caption = "Source: World Bank, 2020")
 ```
+
+
+### Second visual
+
+```{r}
+WB_Agriculture_Indicators %>%
+  filter(year == 2018) %>%
+  filter(series_code == "AG.LND.AGRI.ZS") %>%
+  filter(country_name == "Mexico" | country_name == "Guatemala" |
+     country_name == "Honduras" | country_name == "Nicaragua" |
+     country_name == "El Salvador" | country_name == "Costa Rica" |
+     country_name == "Panama" | country_name == "Belize") %>%
+  filter(!is.na(value)) %>%
+  ggplot(mapping = aes(x = country_name , y = value))+
+  geom_col(fill = "#993300") +
+  geom_text(aes(label=round(value , 1)) , vjust=-1 , size = 4) +
+  theme_minimal() +
+  theme(axis.text.y = element_blank()) +
+  labs(title ="Percentage of Agridultural land per Country in Central America",
+       subtitle = "Plott shows agricultural land as defined by the Food and Agricultural Organization for the year 2018",
+       x = NULL,
+       y= "% of agricultural land",
+       caption = "Source: World Bank, 2022")
+```
+
+
