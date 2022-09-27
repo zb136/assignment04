@@ -1,0 +1,59 @@
+---
+title: "Assignment04" 
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+##Data Cleaning
+
+```{r}
+library(tidyverse)
+library(readxl)
+WB_Agriculture_Indicators <- read_excel("data/WB Agriculture Indicators.xlsx", 
+                                        sheet = "Data")
+
+
+WB_Agriculture_Indicators <- WB_Agriculture_Indicators %>%
+  rename(series_name = 'Series Name',
+         series_code = 'Series Code',
+         country_name = 'Country Name',
+         country_code = 'Country Code')
+  
+
+WB_Agriculture_Indicators <- WB_Agriculture_Indicators %>%
+  pivot_longer(
+    cols = -c(series_name, series_code, country_name, country_code),
+    names_to = "year" ,
+    values_to = "value"
+  )
+
+WB_Agriculture_Indicators$year <- as.numeric(WB_Agriculture_Indicators$year)
+WB_Agriculture_Indicators$value <- as.numeric(WB_Agriculture_Indicators$value)
+```
+
+
+##Data Visualization
+
+```{r}
+WB_Agriculture_Indicators %>%
+  filter(series_code == "SL.AGR.EMPL.FE.ZS") %>%
+  filter(country_name == "Mexico" | country_name == "Guatemala" |
+           country_name == "Honduras" | country_name == "Nicaragua" |
+           country_name == "El Salvador" | country_name == "Costa Rica" |
+           country_name == "Panama" | country_name == "Belize") %>%
+  filter(!is.na(value)) %>%
+  ggplot(mapping = aes(x = year , y = value , group = country_name))+
+           geom_line(mapping = aes(color = country_name) , show.legend = FALSE) +
+           scale_x_continuous(limits = c(2000,2020)) +
+  scale_color_manual(values = c("darkgreen", "cadetblue", "darkorange" , "brown4" , 
+                                "darkblue" , "darkgoldenrod" , "darkorchid4" , "gray44"))+
+  facet_wrap(~country_name) +
+           theme_minimal() +
+  labs(title ="How has female participation in agriculture changed across Central America?",
+       subtitle = "Percentage of female participation in agricultural labor force, as defined by International Labor Organization, from 2000-2020",
+       x = "Year",
+       y= "% of female in agricultural labor force",
+       caption = "Source: World Bank, 2020")
+```
