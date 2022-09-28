@@ -11,11 +11,9 @@ execute:
 
 # Introduction to Assignment
 
-## Source of Data:  
+## Source of Data:
+
 [World Bank Data Bank](https://databank.worldbank.org/reports.aspx?source=2&Topic=1)
-
-
-
 
 ## Data Cleaning
 
@@ -44,14 +42,13 @@ WB_Agriculture_Indicators$year <- as.numeric(WB_Agriculture_Indicators$year)
 WB_Agriculture_Indicators$value <- as.numeric(WB_Agriculture_Indicators$value)
 ```
 
-
 # First Data Visualization
 
 ### First visual
 
 ```{r}
 WB_Agriculture_Indicators %>%
-  filter(series_code == "SL.AGR.EMPL.FE.ZS") %>%
+  filter(series_code == "SL.AGR.EMPL.ZS") %>%
   filter(country_name == "Mexico" | country_name == "Guatemala" |
            country_name == "Honduras" | country_name == "Nicaragua" |
            country_name == "El Salvador" | country_name == "Costa Rica" |
@@ -64,16 +61,12 @@ WB_Agriculture_Indicators %>%
                                 "darkblue" , "darkgoldenrod" , "darkorchid4" , "gray44"))+
   facet_wrap(~country_name) +
            theme_minimal() +
-  
-  labs(title ="How has female participation in agriculture changed across Central America?",
-       subtitle = "Percentage of female participation in agricultural labor force, as defined by International Labor Organization, from 2000-2020",
+  labs(title ="How has participation in agriculture changed across Central America?",
+       subtitle = "Percent of  labor force in  in agriculture, as defined by International Labor Organization, from 2000-2020",
        x = "Year",
-       y= "% of female in agricultural labor force",
-       caption = "Source: World Bank, 2020")
+       y= "% in agricultural labor force",
+       caption = "Source: World Bank, 2022")
 ```
-
-
-
 
 ### Second visualization
 
@@ -87,7 +80,7 @@ WB_Agriculture_Indicators %>%
      country_name == "Panama" | country_name == "Belize") %>%
   filter(!is.na(value)) %>%
   ggplot(mapping = aes(x = country_name , y = value))+
-  geom_col(fill = "#993300") +
+  geom_col(fill = "#993300" , width = 0.7) +
   geom_text(aes(label=round(value , 1)) , vjust=-1 , size = 4) +
   theme_minimal() +
   theme(axis.text.y = element_blank()) +
@@ -96,4 +89,53 @@ WB_Agriculture_Indicators %>%
        x = NULL,
        y= "% of agricultural land",
        caption = "Source: World Bank, 2022")
+```
+
+
+
+```{r}
+x <- WB_Agriculture_Indicators %>%
+  filter(year==2018)%>%
+  filter(series_code == "AG.LND.AGRI.ZS") %>%
+  filter(!is.na(value))%>%
+  pivot_wider(
+    names_from = series_code,
+    values_from = value) %>%
+  select(country_code , country_name , AG.LND.AGRI.ZS )
+
+
+y <- WB_Agriculture_Indicators %>%
+  filter(year==2018)%>%
+  filter(series_code == "SL.AGR.EMPL.ZS") %>%
+  filter(!is.na(value))%>%
+  pivot_wider(
+    names_from = series_code,
+    values_from = value) %>%
+  select(country_code , country_name , SL.AGR.EMPL.ZS )
+
+scatterplott_df <- left_join(x = x , y = y , by = "country_code")
+
+scatterplott_df <- scatterplott_df %>%
+  mutate(cent_america = if_else(
+    country_name.x == "Mexico" | country_name.x == "Guatemala" |
+      country_name.x == "Honduras" | country_name.x == "Nicaragua" |
+      country_name.x == "El Salvador" | country_name.x == "Costa Rica" |
+      country_name.x == "Panama" | country_name.x == "Belize",
+    true = 1 ,
+    false = 0))
+
+scatterplott_df %>%
+  filter(!is.na(SL.AGR.EMPL.ZS)) %>%
+  filter(!is.na(AG.LND.AGRI.ZS)) %>%
+  ggplot(mapping = aes(x=AG.LND.AGRI.ZS , y =SL.AGR.EMPL.ZS , color= as.character(cent_america))) + 
+  geom_point(aes(shape = cent_america ==1) , size = 2 , show.legend = FALSE ) +
+  scale_color_manual(values = c("0" = "grey80" , "1" = "dodgerblue4")) + 
+  geom_text(aes(label=if_else(cent_america== "1" , country_code, "")), vjust= -1 , show.legend = FALSE)+
+  theme_minimal()  +
+  labs(title = "Relationship between agricultural employment and percentage of agricultural land in central America",
+       subtitle = "What si the relationship between...." , 
+       x = "% of land used for agricultural",
+       y = "% of labor force in agriculture",
+       caption = "Source: World Bank 2022")
+
 ```
