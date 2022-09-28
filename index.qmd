@@ -91,7 +91,7 @@ WB_Agriculture_Indicators %>%
        caption = "Source: World Bank, 2022")
 ```
 
-
+### Third Visualization
 
 ```{r}
 x <- WB_Agriculture_Indicators %>%
@@ -137,5 +137,39 @@ scatterplott_df %>%
        x = "% of land used for agricultural",
        y = "% of labor force in agriculture",
        caption = "Source: World Bank 2022")
+
+```
+
+
+
+### Fourth Visualization 
+
+```{r}
+my_factor_levels <- c("Nicaragua" , "Honduras" , "Belize" , "Guatemala",
+                      "El Salvador" , "Costa Rica" , "Mexico" , "Panama")
+
+WB_Agriculture_Indicators$country_name <- factor(WB_Agriculture_Indicators$country_name , levels = my_factor_levels)
+
+
+WB_Agriculture_Indicators %>%
+  filter(year == 2018) %>%
+  filter(series_code == "NV.AGR.TOTL.ZS") %>%
+  filter(country_name == "Mexico" | country_name == "Guatemala" |
+           country_name == "Honduras" | country_name == "Nicaragua" |
+           country_name == "El Salvador" | country_name == "Costa Rica" |
+           country_name == "Panama" | country_name == "Belize") %>%
+  filter(!is.na(value)) %>%
+  ggplot(mapping= (aes(x=country_name , y = value))) +
+  geom_segment(aes(x=country_name , xend = country_name , y=0 , yend=value),  color = "grey") +
+  geom_point(size = 3 , color = "dodgerblue4") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title ="Central American countries by how much agriculture, forestry and fishing contribute to GDP",
+       subtitle = "Value added by agriculture, forestry and fishing as a percent of the country's GDP, for the year 2018",
+       x = NULL,
+       y= "Value added % of GDP",
+       caption = "Source: World Bank, 2022")
+
+
 
 ```
