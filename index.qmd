@@ -42,11 +42,11 @@ WB_Agriculture_Indicators$year <- as.numeric(WB_Agriculture_Indicators$year)
 WB_Agriculture_Indicators$value <- as.numeric(WB_Agriculture_Indicators$value)
 ```
 
-# First Data Visualization
+# Data Visualization
 
 ### First visual
 
-```{r}
+```{r , fig.width = 8, fig.height = 6}
 WB_Agriculture_Indicators %>%
   filter(series_code == "SL.AGR.EMPL.ZS") %>%
   filter(country_name == "Mexico" | country_name == "Guatemala" |
@@ -68,9 +68,13 @@ WB_Agriculture_Indicators %>%
        caption = "Source: World Bank, 2022")
 ```
 
+Our first visualization depicts how labor force participation has changed over the years (2000-2020) in Central america. This can be important information for policy making regarding migration from Central American countries to the United States and analyze what percentage of the population is employed in the agriculture sector and how the trends have changed over time. Moreover it is also essential information for policy makers working on economic development in the region. We can see from the graphs that there is heterogeneity across the Central american countries withc some countries having more than 30% of their labor force employed in agriculture and others with less than 15% . 
+
+
+
 ### Second visualization
 
-```{r}
+```{r , fig.width = 8, fig.height = 6}
 WB_Agriculture_Indicators %>%
   filter(year == 2018) %>%
   filter(series_code == "AG.LND.AGRI.ZS") %>%
@@ -91,9 +95,11 @@ WB_Agriculture_Indicators %>%
        caption = "Source: World Bank, 2022")
 ```
 
+The second visualization depicts the percentage of agricultural land in Central american countries. This builds upon the policy area of the first visual which revolves around economic development in the region. We can use the results to analyze the percentage of labor force in agriculture against the percentage of agricultural land. It is interesting to see that countries like countries like Nicaragua, Honduras and Guatemala that had the highest proportion of labor force in agriculture do not have the higher percentages of agricultural land. This can be an interesting policy area to explore for policymakers. 
+
 ### Third Visualization
 
-```{r}
+```{r , fig.width = 8, fig.height = 6}
 x <- WB_Agriculture_Indicators %>%
   filter(year==2018)%>%
   filter(series_code == "AG.LND.AGRI.ZS") %>%
@@ -128,9 +134,9 @@ scatterplott_df %>%
   filter(!is.na(SL.AGR.EMPL.ZS)) %>%
   filter(!is.na(AG.LND.AGRI.ZS)) %>%
   ggplot(mapping = aes(x=AG.LND.AGRI.ZS , y =SL.AGR.EMPL.ZS , color= as.character(cent_america))) + 
-  geom_point(aes(shape = cent_america ==1) , size = 2 , show.legend = FALSE ) +
+  geom_point(aes(shape = cent_america ==1) , size = 2.5 , alpha = .8 , show.legend = FALSE ) +
   scale_color_manual(values = c("0" = "grey80" , "1" = "dodgerblue4")) + 
-  geom_text(aes(label=if_else(cent_america== "1" , country_code, "")), vjust= -1 , show.legend = FALSE)+
+  geom_text(aes(label=if_else(cent_america== "1" , country_name.x, "")), vjust= -1 , show.legend = FALSE)+
   theme_minimal()  +
   labs(title = "Relationship between agricultural employment and percentage of agricultural land in central America",
        subtitle = "What si the relationship between...." , 
@@ -140,11 +146,12 @@ scatterplott_df %>%
 
 ```
 
+The third visual is a combination of the first two visuals and uses the variables of interest to compare the percentage of labor force in each country against their percentage of land used for agriculture. We have used a scatter plot which will allow policy makers to compare Central American Countries with other countries in the data set. The grey points represent other countries in the data set and show global trends of agricultural labor force and land usage. The scatter plot also shows that there isn't a general trend among the Central american countries which is also depicted in the previous visuals. 
 
 
-### Fourth Visualization 
+### Fourth Visualization
 
-```{r}
+```{r , fig.width = 8, fig.height = 6}
 my_factor_levels <- c("Nicaragua" , "Honduras" , "Belize" , "Guatemala",
                       "El Salvador" , "Costa Rica" , "Mexico" , "Panama")
 
@@ -170,6 +177,10 @@ WB_Agriculture_Indicators %>%
        y= "Value added % of GDP",
        caption = "Source: World Bank, 2022")
 
-
-
 ```
+
+The fourth visual depicts Central american countries ordered by the value added by agriculture , forestry and fishing as a percentage of GDP. The viewer can see that countries with high percentage of labor force in agriculture have higher value added to the percentage of GDP.  
+
+
+
+
